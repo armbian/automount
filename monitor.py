@@ -10,6 +10,8 @@ org_udisks = "org.freedesktop.UDisks2"
 org_udisks_block = org_udisks + ".Block"
 org_udisks_filesys = org_udisks + ".Filesystem"
 
+def dec(a): return bytes(a).decode().rstrip('\0')
+
 class Monitor:
     def __init__(self):
         DBusGMainLoop(set_as_default=True)
@@ -37,7 +39,7 @@ class Monitor:
         if self._added_callback and org_udisks_block in interfaces:
             obj = self._bus.get_object(org_udisks, object_path)
             device = dbus.Interface(obj, org_dbus_props).Get(org_udisks_block, "Device")
-            self._added_callback(object_path, bytes(device).decode())
+            self._added_callback(object_path, dec(device))
 
     def _interfaces_removed(self, object_path, interfaces):
         if self._removed_callback and org_udisks_block in interfaces:
@@ -47,7 +49,7 @@ class Monitor:
         if self._mounts_callback and interface == org_udisks_filesys:
             for prop, value in changed.items():
                 if prop == "MountPoints" and isinstance(value, dbus.Array):
-                    mounts = [ bytes(e[:-1]).decode() for e in value ]
+                    mounts = [ dec(e) for e in value ]
                     self._mounts_callback(object_path, mounts)
 
     def on_device_added(self, callback): self._added_callback = callback
