@@ -5,19 +5,19 @@ from gi.repository import GLib
 class Monitor:
     def __init__(self):
         DBusGMainLoop(set_as_default=True)
-        self.bus = dbus.SystemBus()
+        self._bus = dbus.SystemBus()
 
-        self.bus.add_signal_receiver(self._interfaces_added,
+        self._bus.add_signal_receiver(self._interfaces_added,
             signal_name="InterfacesAdded",
             dbus_interface="org.freedesktop.DBus.ObjectManager",
             bus_name="org.freedesktop.UDisks2"
         )
-        self.bus.add_signal_receiver(self._interfaces_removed,
+        self._bus.add_signal_receiver(self._interfaces_removed,
             signal_name="InterfacesRemoved",
             dbus_interface="org.freedesktop.DBus.ObjectManager",
             bus_name="org.freedesktop.UDisks2"
         )
-        self.bus.add_signal_receiver(self._properties_changed,
+        self._bus.add_signal_receiver(self._properties_changed,
             signal_name="PropertiesChanged",
             dbus_interface="org.freedesktop.DBus.Properties",
             bus_name="org.freedesktop.UDisks2",
@@ -29,7 +29,7 @@ class Monitor:
 
     def _interfaces_added(self, object_path, interfaces):
         if "org.freedesktop.UDisks2.Block" in interfaces:
-            obj = self.bus.get_object("org.freedesktop.UDisks2", object_path)
+            obj = self._bus.get_object("org.freedesktop.UDisks2", object_path)
             props = dbus.Interface(obj, "org.freedesktop.DBus.Properties")
             dev = bytes(props.Get("org.freedesktop.UDisks2.Block", "Device")).decode()
             if self._added_callback: self._added_callback(object_path, dev)
