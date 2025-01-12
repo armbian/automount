@@ -35,8 +35,8 @@ def run(args, env={}):
 
     proc = subprocess.run(args, capture_output=True)
     if proc.returncode:
-        print("ERROR: " + proc.stderr.decode(), file=sys.stderr)
-        return str()
+        print(f"ERROR: {proc.stderr.decode()}", file=sys.stderr)
+        return None
     return proc.stdout.decode()
 
 def udev_props(device):
