@@ -4,11 +4,11 @@ import re
 import subprocess
 import sys
 
-_config_dirs = [ "/usr/share/automount", "/etc/automount" ]
+config_dirs = [ "/usr/share/automount", "/etc/automount" ]
 
 def read_config():
     all_paths = []
-    for dir in _config_dirs:
+    for dir in config_dirs:
         paths = [ path for path in sorted(Path(dir).glob("*.conf")) if path.is_file() ]
         all_paths.extend(paths)
     config = ConfigParser()
