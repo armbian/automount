@@ -13,7 +13,11 @@ org_udisks_filesys = org_udisks + ".Filesystem"
 def dec(a): return bytes(a).decode().rstrip('\0')
 
 class Monitor:
-    def __init__(self):
+    def __init__(self, on_device_added=None, on_device_removed=None, on_mounts_changed=None):
+        self._added_callback = on_device_added
+        self._removed_callback = on_device_removed
+        self._mounts_callback = on_mounts_changed
+
         DBusGMainLoop(set_as_default=True)
         self._bus = dbus.SystemBus()
         self._loop = GLib.MainLoop()
@@ -31,9 +35,6 @@ class Monitor:
             dbus_interface=org_dbus_props, bus_name=org_udisks,
             path_keyword="object_path"
         )
-        self._added_callback = None
-        self._removed_callback = None
-        self._mounts_callback = None
 
     def _interfaces_added(self, object_path, interfaces):
         if self._added_callback and org_udisks_block in interfaces:
@@ -51,10 +52,6 @@ class Monitor:
                 if prop == "MountPoints" and isinstance(value, dbus.Array):
                     mounts = [ dec(e) for e in value ]
                     self._mounts_callback(object_path, mounts)
-
-    def on_device_added(self, callback): self._added_callback = callback
-    def on_device_removed(self, callback): self._removed_callback = callback
-    def on_mounts_changed(self, callback): self._mounts_callback = callback
 
     def run(self): self._loop.run()
     def quit(self): self._loop.quit()
