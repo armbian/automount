@@ -6,6 +6,7 @@ class Monitor:
     def __init__(self):
         DBusGMainLoop(set_as_default=True)
         self._bus = dbus.SystemBus()
+        self._loop = GLib.MainLoop()
 
         self._bus.add_signal_receiver(self._interfaces_added,
             signal_name="InterfacesAdded",
@@ -49,9 +50,5 @@ class Monitor:
     def on_device_removed(self, callback): self._removed_callback = callback
     def on_mounts_changed(self, callback): self._mounts_callback = callback
 
-    def run(self):
-        loop = GLib.MainLoop()
-        try:
-            loop.run()
-        except KeyboardInterrupt:
-            pass
+    def run(self): self._loop.run()
+    def quit(self): self._loop.quit()
