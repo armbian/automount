@@ -2,7 +2,8 @@
 Description=Auto-mount Service
 
 [Service]
-ExecStart=@CMAKE_INSTALL_FULL_LIBEXECDIR@/automount/main.py
+Environment=PYTHONUNBUFFERED=1
+ExecStart=@CMAKE_INSTALL_FULL_LIBEXECDIR@/automount/automount
 StandardOutput=journal
 StandardError=journal
 
