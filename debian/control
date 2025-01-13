@@ -1,0 +1,18 @@
+Source: automount
+Section: admin
+Priority: optional
+Maintainer: Dimitry Ishenko <dimitry.ishenko@gmail.com>
+Rules-Requires-Root: no
+Build-Depends:
+ debhelper-compat (= 13),
+ cmake
+Standards-Version: 4.6.2
+Vcs-Browser: https://github.com/armbian/automount
+Vcs-Git: https://github.com/armbian/automount.git
+
+Package: automount
+Architecture: all
+Depends: ${misc:Depends},
+ python3-dbus,
+ python3-gi
+Description: Auto-mount support for systems with no desktop
