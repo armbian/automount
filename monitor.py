@@ -40,7 +40,8 @@ class Monitor:
             obj = self._bus.get_object(O_F_UD2, object_path)
             props = dbus.Interface(obj, O_F_DB_P)
             device = props.Get(O_F_UD2_B, "Device")
-            self._added_callback(object_path, decode(device))
+            size = props.Get(O_F_UD2_B, "Size")
+            self._added_callback(object_path, decode(device), not size)
 
     def _interfaces_removed(self, object_path, interfaces):
         if self._removed_callback and O_F_UD2_B in interfaces:
