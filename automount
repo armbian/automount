@@ -14,18 +14,10 @@ def handle_sighup(n, f):
 signal(SIGHUP , handle_sighup)
 
 context = {}
-yes = [ "on", "On", "ON", "true", "True", "TRUE", "yes", "Yes", "YES" ]
 
-def device_added(path, device, size):
-    env = udev_props(device)
-    env["SIZE"] = size
-    options = device_options(config, env)
-
-    on_add = options.get("on-add")
-    if on_add: run(on_add, env)
-
+def auto_mount_if(options, device):
     auto_mount = options.get("auto-mount")
-    if auto_mount in yes:
+    if auto_mount in [ "on", "On", "ON", "true", "True", "TRUE", "yes", "Yes", "YES" ]:
         cmd = [ "/usr/bin/udisksctl", "mount", "-b", device ]
 
         mount_options = options.get("mount-options")
@@ -36,19 +28,32 @@ def device_added(path, device, size):
 
         run(cmd)
 
+def device_added(path, device, size):
+    env = udev_props(device)
+    env["SIZE"] = size
+    options = device_options(config, env)
+
+    on_add = options.get("on-add")
+    if on_add: run(on_add, env)
+
+    auto_mount_if(options, device)
+
     context[path] = env
+
+def on_unmount_if(options, env):
+    on_unmount = options.get("on-unmount")
+    if on_unmount:
+        for mount in env.get("MOUNT_POINTS", []):
+            env["MOUNT_POINT"] = mount
+            run(on_unmount, env)
+        env.pop("MOUNT_POINT", None)
+        env.pop("MOUNT_POINTS", None)
 
 def device_removed(path):
     env = context.get(path)
     if env:
         options = device_options(config, env)
-        mounts = env.get("MOUNT_POINTS", [])
-
-        on_unmount = options.get("on-unmount")
-        if on_unmount:
-            for mount in mounts:
-                env["MOUNT_POINT"] = mount
-                run(on_unmount, env)
+        on_unmount_if(options, env)
 
         on_remove = options.get("on-remove")
         if on_remove: run(on_remove, env)
@@ -56,7 +61,25 @@ def device_removed(path):
         context.pop(path)
 
 def device_changed(path, size):
-    pass
+    env = context.get(path)
+    if env:
+        device = env["DEVNAME"]
+        old_size = env["SIZE"]
+
+        # media was inserted - update env
+        if not old_size and size:
+            env = udev_props(device)
+            context[path] = env
+        env["SIZE"] = size
+
+        options = device_options(config, env)
+        on_change = options.get("on-change")
+        if on_change: run(on_change, env)
+
+        # media was inserted - try auto-mount
+        if not old_size and size: auto_mount_if(options, device)
+        # media was removed
+        elif old_size and not size: on_unmount_if(options, env)
 
 def mounts_changed(path, new_mounts):
     env = context.get(path)
