@@ -51,23 +51,22 @@ def udev_props(device):
     return env
 
 def device_options(config, env):
-    options = {}
+    options = dict(config.defaults())
 
     for section in config.sections():
         match = True
-        if section != "DEFAULT":
-            for prop in split_quoted(section):
-                kv = prop.split("=", 1)
-                if not kv[0]: continue # ignore empty keys
+        for prop in split_quoted(section):
+            kv = prop.split("=", 1)
+            if not kv[0]: continue # ignore empty keys
 
-                if kv[0][0] == '!':
-                    value = env.get(kv[0][1:]) or env.get("ID_" + kv[0][1:])
-                    match = (value != kv[1]) if len(kv) > 1 else (value is None)
-                else:
-                    value = env.get(kv[0]) or env.get("ID_" + kv[0])
-                    match = (value == kv[1]) if len(kv) > 1 else (value is not None)
+            if kv[0][0] == '!':
+                value = env.get(kv[0][1:]) or env.get("ID_" + kv[0][1:])
+                match = (value != kv[1]) if len(kv) > 1 else (value is None)
+            else:
+                value = env.get(kv[0]) or env.get("ID_" + kv[0])
+                match = (value == kv[1]) if len(kv) > 1 else (value is not None)
 
-                if not match: break
+            if not match: break
 
         if match:
             for option in config.options(section):
