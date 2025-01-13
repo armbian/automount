@@ -14,5 +14,6 @@ Package: automount
 Architecture: all
 Depends: ${misc:Depends},
  python3-dbus,
- python3-gi
+ python3-gi,
+ udisks2
 Description: Auto-mount support for systems with no desktop
