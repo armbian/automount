@@ -12,9 +12,10 @@ O_F_UD2_FS = "org.freedesktop.UDisks2.Filesystem"
 def decode(a): return bytes(a).decode().rstrip('\0')
 
 class Monitor:
-    def __init__(self, on_device_added=None, on_device_removed=None, on_mounts_changed=None):
+    def __init__(self, on_device_added=None, on_device_removed=None, on_device_changed=None, on_mounts_changed=None):
         self._added_callback = on_device_added
         self._removed_callback = on_device_removed
+        self._changed_callback = on_device_changed
         self._mounts_callback = on_mounts_changed
 
         DBusGMainLoop(set_as_default=True)
@@ -48,11 +49,18 @@ class Monitor:
             self._removed_callback(object_path)
 
     def _properties_changed(self, interface, changed, invalidated, object_path):
-        if self._mounts_callback and interface == O_F_UD2_FS:
+        if self._changed_callback and interface == O_F_UD2_B:
+            for prop, value in changed.items():
+                if prop == "Size":
+                    self._changed_callback(object_path, not value)
+                    break
+
+        elif self._mounts_callback and interface == O_F_UD2_FS:
             for prop, value in changed.items():
                 if prop == "MountPoints" and isinstance(value, dbus.Array):
                     mounts = [ decode(e) for e in value ]
                     self._mounts_callback(object_path, mounts)
+                    break
 
     def run(self): self._loop.run()
     def quit(self): self._loop.quit()

@@ -52,6 +52,9 @@ def device_removed(path):
 
         context.pop(path)
 
+def device_changed(path, empty):
+    pass
+
 def mounts_changed(path, new_mounts):
     env = context.get(path)
     if env:
@@ -76,7 +79,7 @@ def mounts_changed(path, new_mounts):
         env["MOUNT_POINTS"] = new_mounts
 
 print("Creating monitor")
-monitor = Monitor(device_added, device_removed, mounts_changed)
+monitor = Monitor(device_added, device_removed, device_changed, mounts_changed)
 
 def handle_sigint(n, f):
     print(f"Received signal {n} - exiting")
