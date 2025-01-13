@@ -50,6 +50,9 @@ def device_removed(path):
                 env["MOUNT_POINT"] = mount
                 run(on_unmount, env)
 
+        on_remove = options.get("on-remove")
+        if on_remove: run(on_remove, env)
+
         context.pop(path)
 
 def device_changed(path, size):
