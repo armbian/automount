@@ -2,15 +2,14 @@ import dbus
 from dbus.mainloop.glib import DBusGMainLoop
 from gi.repository import GLib
 
-org_dbus = "org.freedesktop.DBus"
-org_dbus_mngr = org_dbus + ".ObjectManager"
-org_dbus_props = org_dbus + ".Properties"
+O_F_DB_OM = "org.freedesktop.DBus.ObjectManager"
+O_F_DB_P = "org.freedesktop.DBus.Properties"
 
-org_udisks = "org.freedesktop.UDisks2"
-org_udisks_block = org_udisks + ".Block"
-org_udisks_filesys = org_udisks + ".Filesystem"
+O_F_UD2 = "org.freedesktop.UDisks2"
+O_F_UD2_B = "org.freedesktop.UDisks2.Block"
+O_F_UD2_FS = "org.freedesktop.UDisks2.Filesystem"
 
-def dec(a): return bytes(a).decode().rstrip('\0')
+def decode(a): return bytes(a).decode().rstrip('\0')
 
 class Monitor:
     def __init__(self, on_device_added=None, on_device_removed=None, on_mounts_changed=None):
@@ -24,33 +23,34 @@ class Monitor:
 
         self._bus.add_signal_receiver(self._interfaces_added,
             signal_name="InterfacesAdded",
-            dbus_interface=org_dbus_mngr, bus_name=org_udisks
+            dbus_interface=O_F_DB_OM, bus_name=O_F_UD2
         )
         self._bus.add_signal_receiver(self._interfaces_removed,
             signal_name="InterfacesRemoved",
-            dbus_interface=org_dbus_mngr, bus_name=org_udisks
+            dbus_interface=O_F_DB_OM, bus_name=O_F_UD2
         )
         self._bus.add_signal_receiver(self._properties_changed,
             signal_name="PropertiesChanged",
-            dbus_interface=org_dbus_props, bus_name=org_udisks,
+            dbus_interface=O_F_DB_P, bus_name=O_F_UD2,
             path_keyword="object_path"
         )
 
     def _interfaces_added(self, object_path, interfaces):
-        if self._added_callback and org_udisks_block in interfaces:
-            obj = self._bus.get_object(org_udisks, object_path)
-            device = dbus.Interface(obj, org_dbus_props).Get(org_udisks_block, "Device")
-            self._added_callback(object_path, dec(device))
+        if self._added_callback and O_F_UD2_B in interfaces:
+            obj = self._bus.get_object(O_F_UD2, object_path)
+            props = dbus.Interface(obj, O_F_DB_P)
+            device = props.Get(O_F_UD2_B, "Device")
+            self._added_callback(object_path, decode(device))
 
     def _interfaces_removed(self, object_path, interfaces):
-        if self._removed_callback and org_udisks_block in interfaces:
+        if self._removed_callback and O_F_UD2_B in interfaces:
             self._removed_callback(object_path)
 
     def _properties_changed(self, interface, changed, invalidated, object_path):
-        if self._mounts_callback and interface == org_udisks_filesys:
+        if self._mounts_callback and interface == O_F_UD2_FS:
             for prop, value in changed.items():
                 if prop == "MountPoints" and isinstance(value, dbus.Array):
-                    mounts = [ dec(e) for e in value ]
+                    mounts = [ decode(e) for e in value ]
                     self._mounts_callback(object_path, mounts)
 
     def run(self): self._loop.run()
