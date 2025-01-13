@@ -15,6 +15,6 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/automount.service
     DESTINATION lib/systemd/system/
 )
 
-install(FILES 30-default.conf
+install(FILES 10-default.conf
     DESTINATION ${CMAKE_INSTALL_DATADIR}/automount/
 )
