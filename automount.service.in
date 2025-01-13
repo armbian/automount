@@ -1,0 +1,7 @@
+[Unit]
+Description=Auto-mount Service
+
+[Service]
+ExecStart=@CMAKE_INSTALL_FULL_LIBEXECDIR@/automount/main.py
+StandardOutput=journal
+StandardError=journal
