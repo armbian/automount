@@ -5,3 +5,6 @@ Description=Auto-mount Service
 ExecStart=@CMAKE_INSTALL_FULL_LIBEXECDIR@/automount/main.py
 StandardOutput=journal
 StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
