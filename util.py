@@ -33,6 +33,7 @@ def run(args, env={}):
     if isinstance(args, str):
         args = split_quoted(subst_vars(args, env))
 
+    print(f"Executing: {args}")
     proc = subprocess.run(args, capture_output=True)
     if proc.returncode:
         print(f"ERROR: {proc.stderr.decode()}", file=sys.stderr)
