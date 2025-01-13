@@ -10,6 +10,7 @@ O_F_UD2_B = "org.freedesktop.UDisks2.Block"
 O_F_UD2_FS = "org.freedesktop.UDisks2.Filesystem"
 
 def decode(a): return bytes(a).decode().rstrip('\0')
+def string(n): return str(n) if n else ""
 
 class Monitor:
     def __init__(self, on_device_added=None, on_device_removed=None, on_device_changed=None, on_mounts_changed=None):
@@ -42,7 +43,7 @@ class Monitor:
             props = dbus.Interface(obj, O_F_DB_P)
             device = props.Get(O_F_UD2_B, "Device")
             size = props.Get(O_F_UD2_B, "Size")
-            self._added_callback(object_path, decode(device), not size)
+            self._added_callback(object_path, decode(device), string(size))
 
     def _interfaces_removed(self, object_path, interfaces):
         if self._removed_callback and O_F_UD2_B in interfaces:
@@ -52,7 +53,7 @@ class Monitor:
         if self._changed_callback and interface == O_F_UD2_B:
             for prop, value in changed.items():
                 if prop == "Size":
-                    self._changed_callback(object_path, not value)
+                    self._changed_callback(object_path, string(value))
                     break
 
         elif self._mounts_callback and interface == O_F_UD2_FS:

@@ -16,9 +16,9 @@ signal(SIGHUP , handle_sighup)
 context = {}
 yes = [ "on", "On", "ON", "true", "True", "TRUE", "yes", "Yes", "YES" ]
 
-def device_added(path, device, empty):
+def device_added(path, device, size):
     env = udev_props(device)
-    if empty: env["EMPTY"] = "1"
+    env["SIZE"] = size
     options = device_options(config, env)
 
     on_add = options.get("on-add")
@@ -52,7 +52,7 @@ def device_removed(path):
 
         context.pop(path)
 
-def device_changed(path, empty):
+def device_changed(path, size):
     pass
 
 def mounts_changed(path, new_mounts):
