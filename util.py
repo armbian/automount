@@ -73,11 +73,3 @@ def device_options(config, env):
                 options[option] = config[section][option]
 
     return options
-
-def get_sudo(s):
-    sudo = []
-    ug = s.split(":", 1)
-    if ug[0]: sudo = sudo + ["-u", ug[0]]
-    if len(ug) > 1 and ug[1]: sudo = sudo + ["-g", ug[1]]
-    if len(sudo): sudo = ["sudo"] + sudo
-    return sudo

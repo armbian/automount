@@ -24,8 +24,14 @@ def auto_mount_if(options, device):
         if mount_options: cmd = cmd + ["-o", mount_options]
 
         mount_as = options.get("mount-as")
-        if mount_as: cmd = get_sudo(mount_as) + cmd
+        if mount_as:
+            old_len = len(cmd)
 
+            ug = mount_as.split(":", 1)
+            if ug[0]: cmd = ["-u", ug[0]] + cmd
+            if len(ug) > 1 and ug[1]: cmd = ["-g", ug[1]] + cmd
+
+            if len(cmd) > old_len: cmd = ["sudo"] + cmd
         run(cmd)
 
 def device_added(path, device, size):
