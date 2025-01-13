@@ -4,7 +4,7 @@ import re
 import subprocess
 import sys
 
-config_dirs = [ "/usr/share/automount", "/etc/automount" ]
+config_dirs = [ "@CMAKE_INSTALL_FULL_DATADIR@/automount", "@CMAKE_INSTALL_FULL_SYSCONFDIR@/automount" ]
 
 def read_config():
     all_paths = []

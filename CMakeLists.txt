@@ -5,13 +5,14 @@ find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
 include(GNUInstallDirs)
 
-install(FILES main.py monitor.py util.py
+configure_file(util.py util.py @ONLY)
+install(FILES main.py monitor.py ${CMAKE_CURRENT_BINARY_DIR}/util.py
     DESTINATION ${CMAKE_INSTALL_LIBEXECDIR}/automount/
 )
 
-configure_file(automount.service.in automount.service @ONLY)
+configure_file(automount.service automount.service @ONLY)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/automount.service
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/systemd/system/
+    DESTINATION lib/systemd/system/
 )
 
 install(FILES 30-default.conf
