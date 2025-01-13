@@ -1,4 +1,5 @@
 from configparser import ConfigParser
+from fnmatch import fnmatch
 from pathlib import Path
 import re
 import subprocess
@@ -61,10 +62,10 @@ def device_options(config, env):
 
             if kv[0][0] == '!':
                 value = env.get(kv[0][1:]) or env.get("ID_" + kv[0][1:])
-                match = (value != kv[1]) if len(kv) > 1 else (value is None)
+                match = value is None or not fnmatch(value, kv[1]) if len(kv) > 1 else False
             else:
                 value = env.get(kv[0]) or env.get("ID_" + kv[0])
-                match = (value == kv[1]) if len(kv) > 1 else (value is not None)
+                match = value is not None and fnmatch(value, kv[1]) if len(kv) > 1 else True
 
             if not match: break
 
