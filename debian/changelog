@@ -1,5 +1,43 @@
-automount (0.1) UNRELEASED; urgency=medium
+automount (0.1) unstable; urgency=medium
 
-  * Initial release.
+  * automount: need quotes
+  * Add debug conf file
+  * util::device_options: support wildcards
+  * automount: refactor
+  * automount: process device_changed events
+  * automount: add on-remove hook
+  * Report SIZE instead of EMPTY
+  * monitor: report device changes
+  * util::device_options: proper DEFAULT handling
+  * automount: clean up removed devices
+  * Add EMPTY=1 property for ejected media
+  * monitor: refactor
+  * main.py -> automount
+  * CMakeLists: reduce number of checks
+  * CMakeLists: don't need python to install
+  * debian: add missing dependency
+  * Add install target
+  * Update README
+  * Add Debian packaging
+  * Move up the default config
+  * CMakeLists: fix install paths
+  * Add CMake project
+  * Add license
+  * Add default config and service files
+  * Add main.py
+  * util: add quote() function
+  * util::run: show executed command
+  * util: add get_sudo() function
+  * util: add device_options() function
+  * util::read_config: tweak
+  * monitor: construct with callbacks
+  * util::run: separate errors from no output
+  * monitor: strip trailing zero
+  * Add util.py module
+  * monitor: refactor
+  * monitor: add quit() function
+  * monitor: "hide" bus
+  * Add monitor.py
+  * Initial commit
 
- -- Dimitry Ishenko <dimitry.ishenko@gmail.com>  Sun, 12 Jan 2025 22:35:31 -0500
+ -- Dimitry Ishenko <dimitry.ishenko@gmail.com>  Mon, 13 Jan 2025 19:01:30 -0500
