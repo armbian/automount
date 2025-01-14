@@ -43,9 +43,9 @@ def run(args, env={}):
         return None
     return proc.stdout.decode()
 
-def udev_props(device):
+def udev_props(device, size):
+    env = { "SIZE": size }
     out = run([ "/usr/bin/udevadm", "info", "-q", "env", device ])
-    env = {}
     for line in out.splitlines():
         key, value = line.split('=', 1)
         env[key] = value

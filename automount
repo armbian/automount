@@ -35,8 +35,7 @@ def auto_mount_if(options, device):
         run(cmd)
 
 def device_added(path, device, size):
-    env = udev_props(device)
-    env["SIZE"] = size
+    env = udev_props(device, size)
     options = device_options(config, env)
 
     on_add = options.get("on-add")
@@ -73,9 +72,10 @@ def device_changed(path, device, size):
 
         # media was inserted - update env
         if not old_size and size:
-            env = udev_props(device)
+            env = udev_props(device, size)
             context[path] = env
-        env["SIZE"] = size
+        else:
+            env["SIZE"] = size
 
         options = device_options(config, env)
         on_change = options.get("on-change")
