@@ -1,3 +1,13 @@
+automount (0.2.1) unstable; urgency=medium
+
+  * debian: copy debug conf
+  * Add manpage
+  * README: tweaks
+  * Revert "CMakeLists: install debug conf"
+  * default: strip back
+
+ -- Dimitry Ishenko <dimitry.ishenko@gmail.com>  Tue, 14 Jan 2025 14:40:36 -0500
+
 automount (0.2) unstable; urgency=medium
 
   * automount: handle missing devices
