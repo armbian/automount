@@ -5,15 +5,11 @@ import re
 import subprocess
 import sys
 
-config_dirs = [ "@CMAKE_INSTALL_FULL_DATADIR@/automount", "@CMAKE_INSTALL_FULL_SYSCONFDIR@/automount" ]
-
 def read_config():
-    all_paths = []
-    for dir in config_dirs:
-        paths = [ path for path in sorted(Path(dir).glob("*.conf")) if path.is_file() ]
-        all_paths.extend(paths)
+    dir = Path("@CMAKE_INSTALL_FULL_SYSCONFDIR@/automount")
+    paths = [ path for path in sorted(dir.glob("*.conf")) if path.is_file() ]
     config = ConfigParser()
-    config.read(all_paths)
+    config.read(paths)
     return config
 
 def quote(s): return '"' + s + '"'
