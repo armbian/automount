@@ -52,7 +52,7 @@ def udev_props(device, size):
     return env
 
 def device_options(config, env):
-    options = dict(config.defaults())
+    options = {}
 
     for section in config.sections():
         match = True
