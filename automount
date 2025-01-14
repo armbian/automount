@@ -67,24 +67,21 @@ def device_removed(path):
 
 def device_changed(path, device, size):
     env = context.get(path)
-    if env:
-        old_size = env["SIZE"]
+    old_size = env["SIZE"] if env else ""
 
-        # media was inserted - update env
-        if not old_size and size:
-            env = udev_props(device, size)
-            context[path] = env
-        else:
-            env["SIZE"] = size
+    # media was inserted - update env
+    if not env or (not old_size and size):
+        env = udev_props(device, size)
+        context[path] = env
 
-        options = device_options(config, env)
-        on_change = options.get("on-change")
-        if on_change: run(on_change, env)
+    options = device_options(config, env)
+    on_change = options.get("on-change")
+    if on_change: run(on_change, env)
 
-        # media was inserted - try auto-mount
-        if not old_size and size: auto_mount_if(options, device)
-        # media was removed
-        elif old_size and not size: on_unmount_if(options, env)
+    # media was inserted - try auto-mount
+    if not old_size and size: auto_mount_if(options, device)
+    # media was removed
+    elif old_size and not size: on_unmount_if(options, env)
 
 def mounts_changed(path, new_mounts):
     env = context.get(path)
