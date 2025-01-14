@@ -4,8 +4,7 @@ project(automount VERSION 0.2 LANGUAGES C)
 include(GNUInstallDirs)
 
 configure_file(util.py util.py @ONLY)
-install(FILES 90-debug.conf automount monitor.py
-    ${CMAKE_CURRENT_BINARY_DIR}/util.py
+install(FILES automount monitor.py ${CMAKE_CURRENT_BINARY_DIR}/util.py
     DESTINATION ${CMAKE_INSTALL_LIBEXECDIR}/automount/
 )
 
