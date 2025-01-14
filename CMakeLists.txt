@@ -16,3 +16,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/automount.service
 install(FILES 10-default.conf
     DESTINATION ${CMAKE_INSTALL_DATADIR}/automount/
 )
+
+install(FILES automount.7
+    DESTINATION ${CMAKE_INSTALL_MANDIR}/man7/
+)
