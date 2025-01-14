@@ -66,10 +66,9 @@ def device_removed(path):
 
         context.pop(path)
 
-def device_changed(path, size):
+def device_changed(path, device, size):
     env = context.get(path)
     if env:
-        device = env["DEVNAME"]
         old_size = env["SIZE"]
 
         # media was inserted - update env

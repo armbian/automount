@@ -53,7 +53,10 @@ class Monitor:
         if self._changed_callback and interface == O_F_UD2_B:
             for prop, value in changed.items():
                 if prop == "Size":
-                    self._changed_callback(object_path, string(value))
+                    obj = self._bus.get_object(O_F_UD2, object_path)
+                    props = dbus.Interface(obj, O_F_DB_P)
+                    device = props.Get(O_F_UD2_B, "Device")
+                    self._changed_callback(object_path, decode(device), string(value))
                     break
 
         elif self._mounts_callback and interface == O_F_UD2_FS:
