@@ -31,8 +31,8 @@ Here is an example of the default config file that comes with **auto-mount**:
 auto-mount = yes
 ```
 
-And, here is an example of the file that keeps a certain drive from being
-auto-mounted:
+And, here is an example of a file overriding the default action for a specific
+drive:
 
 ```ini
 /etc/automount/20-override.conf:
@@ -173,6 +173,8 @@ where `...` represents a command to be executed when the action is triggered.
 For example:
 
 ```ini
+50-spin-down.conf:
+
 [TYPE=cd]
 # set spin-down time to 20 minutes
 on-add = /sbin/hdparm -S 240 ${DEVNAME}
@@ -182,17 +184,19 @@ Commands support basic variable substitution in the form `${VARIABLE}`, where
 `VARIABLE` can be any of the device properties. Additional properties are
 accessible in certain actions:
 
-- The `on-mount` and `on-unmount` actions can use the `${MOUNT_POINT}` property
+* The `on-mount` and `on-unmount` actions can use the `${MOUNT_POINT}` property
   to determine the current mount point.
 
   *Note: The same block device can be mounted at multiple mount points, and the
   `on-mount` and `on-unmount` actions will be executed for each mount point.*
 
-- The `on-add` and `on-change` actions can use the `${SIZE}` property to detect
+* The `on-add` and `on-change` actions can use the `${SIZE}` property to detect
   empty or ejected media, in which case the value of `SIZE` will be empty.
 
 The `mount-options` and `mount-as` values are only applicable when
 `auto-mount = yes`.
+
+Share and enjoy.
 
 ## Authors
 
