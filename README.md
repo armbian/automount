@@ -27,7 +27,7 @@ Here is an example of the default config file that comes with **auto-mount**:
 ```ini
 /usr/share/automount/10-default.conf:
 
-[FS_USAGE=filesystem]
+[ID_FS_USAGE=filesystem]
 auto-mount = yes
 ```
 
@@ -37,7 +37,7 @@ drive:
 ```ini
 /etc/automount/20-override.conf:
 
-[FS_UUID=E428-616E]
+[ID_FS_UUID=E428-616E]
 auto-mount = no
 ```
 
@@ -61,7 +61,7 @@ filesystem:
 ```ini
 20-optical.conf:
 
-[FS_USAGE=filesystem CDROM]
+[ID_FS_USAGE=filesystem ID_CDROM]
 on-unmount = /bin/eject ${DEVNAME}
 ```
 
@@ -73,7 +73,7 @@ drives to be mounted with different options:
 ```ini
 20-vfat.conf:
 
-[FS_TYPE=udf !TYPE=cd]
+[ID_FS_TYPE=udf !ID_TYPE=cd]
 mount-options = uid=1000,gid=1000
 ```
 
@@ -131,21 +131,6 @@ ID_FS_USAGE=filesystem
 ...
 ```
 
-Note: The `ID_` prefix of a property can be omitted in match conditions, so
-this:
-
-```ini
-[ID_FS_LABEL=rootfs]
-...
-```
-
-is equivalent to this:
-
-```ini
-[FS_LABEL=rootfs]
-...
-```
-
 When a block-device event occurs, **auto-mount** extracts actions from all
 sections with matching conditions, with actions in later sections overriding
 the ones in earlier sections.
@@ -175,7 +160,7 @@ For example:
 ```ini
 50-spin-down.conf:
 
-[TYPE=cd]
+[ID_TYPE=cd]
 # set spin-down time to 20 minutes
 on-add = /sbin/hdparm -S 240 ${DEVNAME}
 ```
