@@ -1,3 +1,14 @@
+automount (0.2) unstable; urgency=medium
+
+  * automount: handle missing devices
+  * util::udev_props: add the SIZE property
+  * monitor: pass device to changed callback
+  * Update README
+  * CMakeLists: install debug conf
+  * default: add a few comments
+
+ -- Dimitry Ishenko <dimitry.ishenko@gmail.com>  Tue, 14 Jan 2025 12:59:24 -0500
+
 automount (0.1) unstable; urgency=medium
 
   * automount: need quotes
