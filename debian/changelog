@@ -1,3 +1,9 @@
+automount (0.3) unstable; urgency=medium
+
+  * Make ID_ prefix mandatory
+
+ -- Dimitry Ishenko <dimitry.ishenko@gmail.com>  Tue, 14 Jan 2025 15:28:25 -0500
+
 automount (0.2.1) unstable; urgency=medium
 
   * debian: copy debug conf
