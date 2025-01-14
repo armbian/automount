@@ -33,11 +33,15 @@ def run(args, env={}):
         args = split_quoted(subst_vars(args, env))
 
     print(f"Executing: {args}")
-    proc = subprocess.run(args, capture_output=True)
-    if proc.returncode:
-        print(f"ERROR: {proc.stderr.decode()}", file=sys.stderr)
-        return None
-    return proc.stdout.decode()
+    try:
+        proc = subprocess.run(args, capture_output=True)
+        if not proc.returncode: return proc.stdout.decode()
+        err = proc.stderr.decode()
+    except Exception as e:
+        err = str(e)
+
+    print(f"ERROR: {err}", file=sys.stderr)
+    return None
 
 def udev_props(device, size):
     env = { "SIZE": size }
