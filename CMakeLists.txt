@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16) # focal
-project(automount VERSION 0.2 LANGUAGES C)
+project(automount VERSION 0.2.1 LANGUAGES C)
 
 include(GNUInstallDirs)
 
