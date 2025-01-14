@@ -4,6 +4,7 @@ Description=Auto-mount Service
 [Service]
 Environment=PYTHONUNBUFFERED=1
 ExecStart=@CMAKE_INSTALL_FULL_LIBEXECDIR@/automount/automount
+ExecReload=kill -HUP $MAINPID
 StandardOutput=journal
 StandardError=journal
 
