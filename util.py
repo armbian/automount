@@ -43,9 +43,9 @@ def run(args, env={}):
     print(f"ERROR: {err}", file=sys.stderr)
     return None
 
-def udev_props(device, size):
-    env = { "SIZE": size }
+def udev_props(device):
     out = run([ "/usr/bin/udevadm", "info", "-q", "env", device ])
+    env = {}
     for line in out.splitlines():
         key, value = line.split('=', 1)
         env[key] = value
