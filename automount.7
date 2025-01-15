@@ -34,16 +34,8 @@ plain-text INI-style files with \f[V].conf\f[R] extension, consisting of
 section names (enclosed in \f[V][]\f[R]) followed by actions to be
 performed.
 .PP
-Config files are parsed in alphabetical order from the following
-directories (typically):
-.IP
-.nf
-\f[C]
-/usr/share/automount/
-/etc/automount/
-\f[R]
-.fi
-.PP
+Config files are located in the \f[V]/etc/automount/\f[R] directory
+(typically) and are parsed in alphabetical order.
 Actions in the most recent config files override the ones in earlier
 files.
 .PP
@@ -52,7 +44,7 @@ Here is an example of the default config file that comes with
 .IP
 .nf
 \f[C]
-/usr/share/automount/10-default.conf:
+/etc/automount/10-default.conf:
 
 [ID_FS_USAGE=filesystem]
 auto-mount = yes
@@ -181,9 +173,6 @@ ID_FS_USAGE=filesystem
 When a block-device event occurs, \f[B]auto-mount\f[R] extracts actions
 from all sections with matching conditions, with actions in later
 sections overriding the ones in earlier sections.
-.PP
-A special section called \f[V][DEFAULT]\f[R] can contain actions that
-will apply (if not overridden) to any event.
 .SH ACTIONS
 .PP
 An action can be any of the following:
@@ -219,20 +208,14 @@ on-add = /sbin/hdparm -S 240 ${DEVNAME}
 Commands support basic variable substitution in the form
 \f[V]${VARIABLE}\f[R], where \f[V]VARIABLE\f[R] can be any of the device
 properties.
-Additional properties are accessible in certain actions:
-.IP \[bu] 2
-The \f[V]on-mount\f[R] and \f[V]on-unmount\f[R] actions can use the
-\f[V]${MOUNT_POINT}\f[R] property to determine the current mount point.
-.RS 2
+.PP
+Additionally, the \f[V]on-mount\f[R] and \f[V]on-unmount\f[R] actions
+can use the \f[V]${MOUNT_POINT}\f[R] property to determine the current
+mount point.
 .PP
 \f[I]Note: The same block device can be mounted at multiple mount
 points, and the \f[VI]on-mount\f[I] and \f[VI]on-unmount\f[I] actions
 will be executed for each mount point.\f[R]
-.RE
-.IP \[bu] 2
-The \f[V]on-add\f[R] and \f[V]on-change\f[R] actions can use the
-\f[V]${SIZE}\f[R] property to detect empty or ejected media, in which
-case the value of \f[V]SIZE\f[R] will be empty.
 .PP
 The \f[V]mount-options\f[R] and \f[V]mount-as\f[R] values are only
 applicable when \f[V]auto-mount = yes\f[R].
