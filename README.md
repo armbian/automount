@@ -14,18 +14,14 @@ containing a filesystem, when it appears in the system.
 INI-style files with `.conf` extension, consisting of section names (enclosed
 in `[]`) followed by actions to be performed.
 
-Config files are parsed in alphabetical order from the following directories
-(typically):
-
-`/usr/share/automount/`<br>
-`/etc/automount/`
-
-Actions in the most recent config files override the ones in earlier files.
+Config files are located in the `/etc/automount/` directory (typically) and are
+parsed in alphabetical order. Actions in the most recent config files override
+the ones in earlier files.
 
 Here is an example of the default config file that comes with **auto-mount**:
 
 ```ini
-/usr/share/automount/10-default.conf:
+/etc/automount/10-default.conf:
 
 [ID_FS_USAGE=filesystem]
 auto-mount = yes
@@ -135,9 +131,6 @@ When a block-device event occurs, **auto-mount** extracts actions from all
 sections with matching conditions, with actions in later sections overriding
 the ones in earlier sections.
 
-A special section called `[DEFAULT]` can contain actions that will apply (if
-not overridden) to any event.
-
 ### Actions
 
 An action can be any of the following:
@@ -166,17 +159,13 @@ on-add = /sbin/hdparm -S 240 ${DEVNAME}
 ```
 
 Commands support basic variable substitution in the form `${VARIABLE}`, where
-`VARIABLE` can be any of the device properties. Additional properties are
-accessible in certain actions:
+`VARIABLE` can be any of the device properties.
 
-* The `on-mount` and `on-unmount` actions can use the `${MOUNT_POINT}` property
-  to determine the current mount point.
+Additionally, the `on-mount` and `on-unmount` actions can use the
+`${MOUNT_POINT}` property to determine the current mount point.
 
-  *Note: The same block device can be mounted at multiple mount points, and the
-  `on-mount` and `on-unmount` actions will be executed for each mount point.*
-
-* The `on-add` and `on-change` actions can use the `${SIZE}` property to detect
-  empty or ejected media, in which case the value of `SIZE` will be empty.
+*Note: The same block device can be mounted at multiple mount points, and the
+`on-mount` and `on-unmount` actions will be executed for each mount point.*
 
 The `mount-options` and `mount-as` values are only applicable when
 `auto-mount = yes`.
