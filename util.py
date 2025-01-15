@@ -26,7 +26,7 @@ def split_quoted(s):
 
 def subst_vars(s, env):
     pattern = re.compile(r'\$\{([^}]+)\}')
-    return re.sub(pattern, lambda match: env.get(match.group(1), match.group(0)), s)
+    return re.sub(pattern, lambda match: env.get(match.group(1), ""), s)
 
 def run(args, env={}):
     if isinstance(args, str):
