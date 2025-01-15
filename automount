@@ -34,7 +34,7 @@ def auto_mount_if(options, device):
             if len(cmd) > old_len: cmd = ["sudo"] + cmd
         run(cmd)
 
-def device_added(path, device, size):
+def device_added(path, device):
     env = udev_props(device)
     context[path] = env
     options = device_options(config, env)
@@ -64,7 +64,7 @@ def device_removed(path):
 
         context.pop(path)
 
-def device_changed(path, device, size):
+def device_changed(path, device):
     old_usage = context.get(path, {}).get("ID_FS_USAGE", None)
 
     env = udev_props(device)
